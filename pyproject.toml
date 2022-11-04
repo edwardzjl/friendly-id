@@ -38,7 +38,7 @@ push = false
     'version = "{version}"',
     'current_version = "{version}"',
 ]
+"friendly_id/__init__.py" = ["{version}"]
 "README.md" = [
     "{version}",
 ]
-
