@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "friendly-id"
-version = "0.2.0"
+version = "0.2.1"
 description = "Read the latest Real Python tutorials"
 readme = "README.md"
 authors = [{ name = "Junlin Zhou", email = "jameszhou2108@hotmail.com" }]
@@ -28,7 +28,7 @@ requires-python = ">=3.5"
     repository = "https://github.com/edwardzjl/friendly-id"
 
 [tool.bumpver]
-current_version = "0.2.0"
+current_version = "0.2.1"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message = "bump version {old_version} -> {new_version}"
 commit = true
