@@ -1,6 +1,6 @@
 # Friendly Id
 
-> version 0.2.2
+> version 0.3.0
 
 Inspired by [FriendlyID](https://github.com/Devskiller/friendly-id)
 
