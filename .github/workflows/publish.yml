@@ -3,7 +3,7 @@ name: publish friendly-id
 on:
   push:
     tags:
-      - v**
+      - "*"
   workflow_dispatch:  # Allows to trigger the workflow manually in GitHub UI
 
 
