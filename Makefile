@@ -1,6 +1,6 @@
 
 # Default target executed when no arguments are given to make.
-all: help
+all: build
 
 lint:
 	black . --check
@@ -10,6 +10,9 @@ format:
 
 test:
 	python -m unittest
+
+build:
+	python -m build
 
 ######################
 # HELP
