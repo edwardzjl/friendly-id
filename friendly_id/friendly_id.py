@@ -2,12 +2,14 @@ import uuid
 
 
 # https://en.wikipedia.org/wiki/Base62
-base62alphabet: str = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-base: int = len(base62alphabet) # base62
+base62alphabet: str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+base: int = len(base62alphabet)  # base62
+
 
 def friendly_id() -> str:
     id = uuid.uuid4()
     return encode(id)
+
 
 def encode(raw: uuid.UUID) -> str:
     """
@@ -21,13 +23,14 @@ def encode(raw: uuid.UUID) -> str:
     Returns:
         str: _description_
     """
-    
+
     input = raw.int
-    res = ''
+    res = ""
     while input != 0:
         res += base62alphabet[input % base]
         input = input // base
     return res[::-1]
+
 
 def decode(raw: str) -> uuid.UUID:
     res = 0
@@ -35,6 +38,6 @@ def decode(raw: str) -> uuid.UUID:
         try:
             i = base62alphabet.index(c)
         except ValueError:
-            raise ValueError('Invalid character in base62 string')
+            raise ValueError("Invalid character in base62 string")
         res = res * base + i
     return uuid.UUID(int=res)
