@@ -1,6 +1,6 @@
 # Friendly Id
 
-> version 0.3.2
+> version 0.3.3
 
 [![test friendly-id](https://github.com/edwardzjl/friendly-id/actions/workflows/test.yml/badge.svg)](https://github.com/edwardzjl/friendly-id/actions/workflows/test.yml)
 

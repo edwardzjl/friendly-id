@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "friendly-id"
-version = "0.3.2"
+version = "0.3.3"
 description = "friendly-id is a Python library to generate really unique and url friendly IDs based on UUID and base62"
 readme = "README.md"
 authors = [{ name = "Junlin Zhou", email = "jameszhou2108@hotmail.com" }]
@@ -28,7 +28,7 @@ requires-python = ">=3.5"
     repository = "https://github.com/edwardzjl/friendly-id"
 
 [tool.bumpver]
-current_version = "0.3.2"
+current_version = "0.3.3"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message = "bump version {old_version} -> {new_version}"
 commit = true
