@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "friendly-id"
 version = "0.3.1"
-description = "Read the latest Real Python tutorials"
+description = "friendly-id is a Python library to generate really unique and url friendly IDs based on UUID and base62"
 readme = "README.md"
 authors = [{ name = "Junlin Zhou", email = "jameszhou2108@hotmail.com" }]
 license = { file = "LICENSE" }
