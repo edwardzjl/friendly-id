@@ -149,6 +149,59 @@ loaded_uuid = FriendlyUUID(db_value)
 print(loaded_uuid)  # Displays in friendly format
 ```
 
+## SQLAlchemy Integration
+
+FriendlyUUID includes seamless SQLAlchemy integration through an optional extra:
+
+```sh
+pip install friendly-id[sqlalchemy]
+```
+
+### FriendlyUUIDType
+
+Stores UUIDs in the database's native UUID format while providing FriendlyUUID objects in Python:
+
+```python
+from sqlalchemy import Text, create_engine
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from friendly_id import FriendlyUUID
+from friendly_id.sqlalchemy_types import FriendlyUUIDType
+
+class Base(DeclarativeBase):
+    pass
+
+class User(Base):
+    __tablename__ = 'users'
+
+    id: Mapped[FriendlyUUID] = mapped_column(
+        FriendlyUUIDType, primary_key=True, insert_default=FriendlyUUID.random
+    )
+    name: Mapped[str] = mapped_column(Text)
+    email: Mapped[str] = mapped_column(Text)
+
+# Usage
+user = User(name="Alice", email="alice@example.com")
+session.add(user)
+session.commit()
+
+print(user.id)  # Prints: 5wbwf6yUxVBcr48AMbz9cb (base62 format)
+print(user.id.standard)  # Prints: c3587ec5-0976-497f-8374-61e0c2ea3da5
+
+# Query by any format
+alice = session.query(User).filter_by(id=user.id).first()  # FriendlyUUID
+alice = session.query(User).filter_by(id=str(user.id)).first()  # base62 string
+alice = session.query(User).filter_by(id=user.id.standard).first()  # UUID string
+```
+
+### Database Compatibility
+
+FriendlyUUIDType automatically selects the optimal storage format for each database:
+
+- **PostgreSQL**: Uses native UUID type for optimal performance and indexing
+- **MySQL**: Uses CHAR(36) for UUID string storage
+- **SQLite**: Uses TEXT for UUID string storage
+- **Other databases**: Falls back to string storage
+
 ## Breaking Changes
 
 **⚠️ Important**: 0.4.0 introduces breaking changes from previous versions:
