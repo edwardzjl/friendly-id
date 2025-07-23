@@ -1,4 +1,4 @@
-from friendly_id.friendly_id import FriendlyUUID
+from .friendly_id import FriendlyUUID
 
 __version__ = "0.4.0"
 
