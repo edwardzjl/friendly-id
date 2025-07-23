@@ -16,6 +16,9 @@ keywords = ["uuid", "friendly-id"]
 requires-python = ">=3.9"
 dependencies = []
 
+[project.optional-dependencies]
+sqlalchemy = ["sqlalchemy>=2.0"]
+
 [dependency-groups]
 dev = [
     "pre-commit>=4.2.0",
