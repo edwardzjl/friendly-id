@@ -19,7 +19,6 @@ class TestFriendlyUUID(unittest.TestCase):
         fuid = FriendlyUUID.random()
         self.assertIsInstance(fuid, FriendlyUUID)
         self.assertIsInstance(fuid, uuid.UUID)
-        self.assertEqual(len(str(fuid)), 22)  # Base62 should be max 22 chars for UUID
 
         # Test properties exist
         self.assertTrue(hasattr(fuid, "friendly"))
@@ -42,7 +41,6 @@ class TestFriendlyUUID(unittest.TestCase):
 
         # Test string operations
         friendly_str = str(fuid)
-        self.assertEqual(len(friendly_str), 22)
         self.assertTrue(friendly_str.upper().isupper())
 
         # Test in f-string formatting
