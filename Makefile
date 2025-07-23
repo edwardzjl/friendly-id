@@ -3,16 +3,18 @@
 all: build
 
 lint:
-	black . --check
+	uv run ruff check
+	uv run ruff format --check
 
 format:
-	black .
+	uv run ruff check --fix
+	uv run ruff format
 
 test:
-	python -m unittest
+	uv run python -m unittest
 
 build:
-	python -m build
+	uv build
 
 ######################
 # HELP
@@ -23,3 +25,4 @@ help:
 	@echo 'format                       - run code formatters'
 	@echo 'lint                         - run linters'
 	@echo 'test                         - run unit tests'
+	@echo 'build                        - build the package'
