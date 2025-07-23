@@ -1,14 +1,11 @@
-
-[build-system]
-requires = ["setuptools>=61.0.0", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "friendly-id"
 version = "0.3.3"
 description = "friendly-id is a Python library to generate really unique and url friendly IDs based on UUID and base62"
 readme = "README.md"
-authors = [{ name = "Junlin Zhou", email = "jameszhou2108@hotmail.com" }]
+authors = [
+    { name = "Junlin Zhou", email = "jameszhou2108@hotmail.com" }
+]
 license = { file = "LICENSE" }
 classifiers = [
     "License :: OSI Approved :: MIT License",
@@ -16,29 +13,14 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 keywords = ["uuid", "friendly-id"]
+requires-python = ">=3.9"
 dependencies = []
-requires-python = ">=3.5"
 
-    [project.optional-dependencies]
-    build = ["build", "twine"]
-    dev = ["black", "bumpver", "isort", "pip-tools", "pytest"]
+[dependency-groups]
+dev = [
+    "ruff>=0.12.4",
+]
 
-    [project.urls]
-    homepage = "https://github.com/edwardzjl/friendly-id"
-    repository = "https://github.com/edwardzjl/friendly-id"
-
-[tool.bumpver]
-current_version = "0.3.3"
-version_pattern = "MAJOR.MINOR.PATCH"
-commit_message = "bump version {old_version} -> {new_version}"
-commit = true
-tag = true
-push = false
-
-    [tool.bumpver.file_patterns]
-    "pyproject.toml" = [
-        'current_version = "{version}"',
-        'version = "{version}"',
-    ]
-    "friendly_id/__init__.py" = ["{version}"]
-    "README.md" = ["{version}"]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
