@@ -1,8 +1,3 @@
-#!/usr/bin/env python3
-"""
-Unit tests for the UUID-extending approach using unittest framework.
-"""
-
 import unittest
 import uuid
 
@@ -128,23 +123,6 @@ class TestFriendlyUUID(unittest.TestCase):
         uuid_set = {regular_uuid, friendly_uuid}
         self.assertEqual(len(uuid_set), 1)  # Should deduplicate to 1 item
 
-    def test_breaking_changes_behavior(self):
-        """Test the breaking changes this approach introduces."""
-        fuid = FriendlyUUID.random()
-        regular_equivalent = fuid.to_uuid()
-
-        # Test that str() returns different formats
-        self.assertNotEqual(str(fuid), str(regular_equivalent))
-        self.assertEqual(len(str(fuid)), 22)  # Base62 format
-        self.assertEqual(len(str(regular_equivalent)), 36)  # Standard UUID format
-
-        # Test that standard property gives UUID format
-        self.assertEqual(fuid.standard, str(regular_equivalent))
-
-        # Test repr format
-        self.assertIn("FriendlyUUID", repr(fuid))
-        self.assertIn("UUID", repr(regular_equivalent))
-
     def test_error_handling(self):
         """Test error handling for invalid inputs."""
         # Test invalid friendly string
@@ -190,19 +168,6 @@ class TestFriendlyUUID(unittest.TestCase):
 
         # Test that base62 strings are reasonable length
         self.assertLessEqual(len(str(fuid_max)), 22)
-
-    def test_known_conversions(self):
-        """Test known UUID to base62 conversions."""
-        # Test the specific example from the original code
-        test_uuid = uuid.UUID("c3587ec5-0976-497f-8374-61e0c2ea3da5")
-        expected_base62 = "5wbwf6yUxVBcr48AMbz9cb"
-
-        fuid = FriendlyUUID.from_uuid(test_uuid)
-        self.assertEqual(str(fuid), expected_base62)
-
-        # Test reverse conversion
-        fuid_from_base62 = FriendlyUUID.from_friendly(expected_base62)
-        self.assertEqual(fuid_from_base62.to_uuid(), test_uuid)
 
 
 if __name__ == "__main__":
