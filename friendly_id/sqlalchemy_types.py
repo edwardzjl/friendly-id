@@ -22,6 +22,10 @@ except ImportError:
 
 import uuid
 
+# TODO: We can drop Union once Python 3.9 reaches EOL.
+# <https://peps.python.org/pep-0604/>
+from typing import Union
+
 from .friendly_id import FriendlyUUID
 
 
@@ -72,8 +76,8 @@ class FriendlyUUIDType(types.TypeDecorator):
             return dialect.type_descriptor(types.String(36))
 
     def process_bind_param(
-        self, value: FriendlyUUID | uuid.UUID | str | None, dialect: Dialect
-    ) -> uuid.UUID | str | None:
+        self, value: Union[FriendlyUUID, uuid.UUID, str, None], dialect: Dialect
+    ) -> Union[uuid.UUID, str, None]:
         """Convert Python value to database value."""
         if value is None:
             return None
@@ -115,8 +119,8 @@ class FriendlyUUIDType(types.TypeDecorator):
             )
 
     def process_result_value(
-        self, value: uuid.UUID | str | None, dialect: Dialect
-    ) -> FriendlyUUID | None:
+        self, value: Union[uuid.UUID, str, None], dialect: Dialect
+    ) -> Union[FriendlyUUID, None]:
         """Convert database value to Python value."""
         if value is None:
             return None
