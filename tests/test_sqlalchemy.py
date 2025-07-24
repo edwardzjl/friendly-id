@@ -7,6 +7,10 @@ These tests require SQLAlchemy to be installed:
 
 import unittest
 import uuid
+
+# TODO: We can drop Union once Python 3.9 reaches EOL.
+# <https://peps.python.org/pep-0604/>
+from typing import Union
 from unittest.mock import Mock
 
 try:
@@ -175,7 +179,7 @@ class TestFriendlyUUIDSQLAlchemy(unittest.TestCase):
         class OptionalUser(self.Base):
             __tablename__ = "optional_users"
             id: Mapped[int] = mapped_column(Integer, primary_key=True)
-            uuid_field: Mapped[FriendlyUUID | None] = mapped_column(
+            uuid_field: Mapped[Union[FriendlyUUID, None]] = mapped_column(
                 FriendlyUUIDType, nullable=True
             )
             name: Mapped[str] = mapped_column(Text)
