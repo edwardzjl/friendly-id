@@ -202,6 +202,58 @@ FriendlyUUIDType automatically selects the optimal storage format for each datab
 - **SQLite**: Uses TEXT for UUID string storage
 - **Other databases**: Falls back to string storage
 
+## Pydantic Integration
+
+FriendlyUUID includes built-in Pydantic v2 support for seamless integration with Pydantic models. Install the optional extra for enhanced features:
+
+```sh
+pip install friendly-id[pydantic]
+```
+
+**Note**: This library requires Pydantic v2.0 or higher. Pydantic v1 is no longer supported.
+
+### Basic Usage with Pydantic
+
+```python
+from pydantic import BaseModel
+from friendly_id.pydantic_types import PydanticFriendlyUUID as FriendlyUUID
+
+class User(BaseModel):
+    id: FriendlyUUID
+    name: str
+    email: str
+
+# Create from various input types
+user1 = User(id=FriendlyUUID.random(), name="John", email="john@example.com")
+user2 = User(id="5wbwf6yUxVBcr48AMbz9cb", name="Jane", email="jane@example.com")  # base62
+user3 = User(id="c3587ec5-0976-497f-8374-61e0c2ea3da5", name="Bob", email="bob@example.com")  # UUID
+
+# Serialization automatically uses base62 format
+print(user1.model_dump_json())
+# {"id": "7mkedUHZ3nyAx11JWbR91z", "name": "John", "email": "john@example.com"}
+```
+
+### Validation Features
+
+FriendlyUUID automatically validates and converts:
+- Existing FriendlyUUID instances (pass-through)
+- Regular UUID objects
+- Base62 strings
+- Standard UUID strings
+- Rejects invalid formats with clear error messages
+
+### JSON Schema Support
+
+FriendlyUUID provides proper JSON schema for OpenAPI generation:
+
+```python
+schema = User.model_json_schema()
+# FriendlyUUID fields include:
+# - type: "string"
+# - pattern: "^[0-9A-Za-z]+$" (base62 validation)
+# - description: "A URL-friendly base62 encoded UUID"
+```
+
 ## Breaking Changes
 
 **⚠️ Important**: 0.4.0 introduces breaking changes from previous versions:
