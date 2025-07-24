@@ -1,4 +1,4 @@
-name: test friendly-id
+name: friendly-id CI
 
 on:
   push:
