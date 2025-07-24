@@ -254,6 +254,49 @@ schema = User.model_json_schema()
 # - description: "A URL-friendly base62 encoded UUID"
 ```
 
+## Performance
+
+FriendlyUUID involves a trade-off between CPU overhead and I/O efficiency:
+
+- **CPU**: ~6x slower base62 encoding (~3 microseconds per ID)
+- **I/O**: 39% bandwidth savings (22 vs 36 characters)
+- **Database**: Uses native UUID storage (no storage overhead)
+
+Run the included benchmark to see detailed performance analysis:
+```bash
+python benchmark.py --count 1000
+```
+
+For detailed performance analysis, see [PERFORMANCE.md](PERFORMANCE.md).
+
+## Choosing Between FriendlyUUID and Standard UUID
+
+FriendlyUUID presents a clear trade-off: **3 microseconds CPU overhead vs 14 characters I/O savings per ID**.
+
+### Consider FriendlyUUID when:
+- Network bandwidth or data transfer costs are significant
+- User-facing URLs and identifiers matter for UX  
+- Text-based logging and data export are frequent
+- Web APIs where transfer size matters
+- Mobile applications with bandwidth constraints
+
+### Consider Standard UUID when:
+- High-frequency serialization with minimal I/O
+- CPU resources are constrained or critical
+- Existing systems require standard UUID format
+- Microsecond-level performance is essential
+- Real-time systems where every cycle counts
+
+### Evaluation Factors
+Consider your application's specific characteristics:
+- **I/O vs CPU ratio**: How much network/text processing vs computation?
+- **Scale**: Volume of UUID operations vs data transmission
+- **Constraints**: CPU limitations vs bandwidth costs
+- **User experience**: Does identifier readability matter?
+- **Integration**: Compatibility with existing systems
+
+Run the benchmark with your expected workload to get concrete numbers for your specific use case.
+
 ## Breaking Changes
 
 **⚠️ Important**: 0.4.0 introduces breaking changes from previous versions:
