@@ -23,6 +23,7 @@ sqlalchemy = ["sqlalchemy>=2.0"]
 dev = [
     "pre-commit>=4.2.0",
     "ruff>=0.12.4",
+    "sqlalchemy>=2.0",
 ]
 
 [build-system]
