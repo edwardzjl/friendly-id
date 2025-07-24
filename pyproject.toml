@@ -18,12 +18,18 @@ dependencies = []
 
 [project.optional-dependencies]
 sqlalchemy = ["sqlalchemy>=2.0"]
+pydantic = ["pydantic>=2.0"]
+all = [
+    "sqlalchemy>=2.0",
+    "pydantic>=2.0",
+]
 
 [dependency-groups]
 dev = [
     "pre-commit>=4.2.0",
     "ruff>=0.12.4",
     "sqlalchemy>=2.0",
+    "pydantic>=2.0",
 ]
 
 [build-system]
