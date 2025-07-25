@@ -52,7 +52,7 @@ class BenchmarkRunner:
         # Pre-generate test data
         print(f"Generating {count} test UUIDs...")
         self.standard_uuids = [uuid.uuid4() for _ in range(count)]
-        self.friendly_uuids = [FriendlyID.from_uuid(u) for u in self.standard_uuids]
+        self.friendly_ids = [FriendlyID.from_uuid(u) for u in self.standard_uuids]
 
     def benchmark_serialization_performance(self):
         """Benchmark CPU cost of serialization - the core base62 conversion."""
@@ -64,7 +64,7 @@ class BenchmarkRunner:
             return [str(u) for u in self.standard_uuids]
 
         def friendly_to_string():
-            return [str(f) for f in self.friendly_uuids]
+            return [str(f) for f in self.friendly_ids]
 
         # JSON scenario (common real-world case)
         def uuid_json():
@@ -72,7 +72,7 @@ class BenchmarkRunner:
             return json.dumps(data)
 
         def friendly_json():
-            data = [str(f) for f in self.friendly_uuids]
+            data = [str(f) for f in self.friendly_ids]
             return json.dumps(data)
 
         results = {
@@ -111,7 +111,7 @@ class BenchmarkRunner:
 
         # The core difference: UUID string vs base62 string
         uuid_strings = [str(u) for u in self.standard_uuids]
-        friendly_strings = [str(f) for f in self.friendly_uuids]
+        friendly_strings = [str(f) for f in self.friendly_ids]
 
         # Calculate total characters and bytes
         uuid_chars = sum(len(s) for s in uuid_strings)

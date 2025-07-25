@@ -64,7 +64,7 @@ class PydanticFriendlyID(FriendlyID):
         to PydanticFriendlyID instances.
         """
 
-        def validate_friendly_uuid(value: Any) -> "PydanticFriendlyID":
+        def validate_friendly_id(value: Any) -> "PydanticFriendlyID":
             """Validate and convert input to PydanticFriendlyID."""
             if isinstance(value, cls):
                 return value
@@ -94,15 +94,15 @@ class PydanticFriendlyID(FriendlyID):
                 core_schema.is_instance_schema(cls),
                 # Accept strings and convert them
                 core_schema.no_info_after_validator_function(
-                    validate_friendly_uuid, core_schema.str_schema()
+                    validate_friendly_id, core_schema.str_schema()
                 ),
                 # Accept UUID instances and convert them
                 core_schema.no_info_after_validator_function(
-                    validate_friendly_uuid, core_schema.is_instance_schema(uuid.UUID)
+                    validate_friendly_id, core_schema.is_instance_schema(uuid.UUID)
                 ),
                 # Accept FriendlyID instances and convert them
                 core_schema.no_info_after_validator_function(
-                    validate_friendly_uuid, core_schema.is_instance_schema(FriendlyID)
+                    validate_friendly_id, core_schema.is_instance_schema(FriendlyID)
                 ),
             ],
             serialization=core_schema.to_string_ser_schema(),

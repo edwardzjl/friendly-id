@@ -51,7 +51,7 @@ class TestPydanticIntegration(unittest.TestCase):
 
         self.User = User
         self.UserResponse = UserResponse
-        self.test_friendly_uuid = PydanticFriendlyID.from_friendly(
+        self.test_friendly_id = PydanticFriendlyID.from_friendly(
             "5wbwf6yUxVBcr48AMbz9cb"
         )
 
@@ -69,7 +69,7 @@ class TestPydanticIntegration(unittest.TestCase):
             callable(getattr(PydanticFriendlyID, "__get_pydantic_json_schema__"))
         )
 
-    def test_validation_with_friendly_uuid_instance(self):
+    def test_validation_with_friendly_id_instance(self):
         """Test validation with PydanticFriendlyID instance."""
         fuid = PydanticFriendlyID.random()
         user = self.User(id=fuid, name="John Doe")
@@ -103,7 +103,7 @@ class TestPydanticIntegration(unittest.TestCase):
         self.assertIsInstance(user.id, PydanticFriendlyID)
         self.assertEqual(user.id.int, regular_uuid.int)
 
-    def test_validation_with_regular_friendly_uuid(self):
+    def test_validation_with_regular_friendly_id(self):
         """Test validation with regular FriendlyID instance."""
         regular_fuid = FriendlyID.random()
         user = self.User(id=regular_fuid, name="Charlie Brown")
@@ -130,10 +130,10 @@ class TestPydanticIntegration(unittest.TestCase):
     def test_serialization_to_dict(self):
         """Test serialization to dictionary."""
         user = self.User(
-            id=self.test_friendly_uuid,
+            id=self.test_friendly_id,
             name="Test User",
             email="test@example.com",
-            parent_id=self.test_friendly_uuid,
+            parent_id=self.test_friendly_id,
         )
 
         user_dict = user.model_dump()
@@ -149,18 +149,18 @@ class TestPydanticIntegration(unittest.TestCase):
     def test_serialization_to_json(self):
         """Test serialization to JSON."""
         user = self.User(
-            id=self.test_friendly_uuid,
+            id=self.test_friendly_id,
             name="Test User",
             email="test@example.com",
-            parent_id=self.test_friendly_uuid,
+            parent_id=self.test_friendly_id,
         )
 
         json_str = user.model_dump_json()
         json_data = json.loads(json_str)
 
         # Check that IDs are serialized as base62 strings in JSON
-        self.assertEqual(json_data["id"], str(self.test_friendly_uuid))
-        self.assertEqual(json_data["parent_id"], str(self.test_friendly_uuid))
+        self.assertEqual(json_data["id"], str(self.test_friendly_id))
+        self.assertEqual(json_data["parent_id"], str(self.test_friendly_id))
 
         # Check other values
         self.assertEqual(json_data["name"], "Test User")
@@ -169,7 +169,7 @@ class TestPydanticIntegration(unittest.TestCase):
     def test_round_trip_serialization(self):
         """Test round-trip serialization (model -> JSON -> model)."""
         original_user = self.User(
-            id=self.test_friendly_uuid,
+            id=self.test_friendly_id,
             name="Round Trip User",
             email="roundtrip@example.com",
         )
@@ -190,7 +190,7 @@ class TestPydanticIntegration(unittest.TestCase):
         user = self.User(
             id=PydanticFriendlyID.random(),
             name="Nested User",
-            parent_id=self.test_friendly_uuid,
+            parent_id=self.test_friendly_id,
         )
 
         response = self.UserResponse(user=user, success=True)
@@ -202,7 +202,7 @@ class TestPydanticIntegration(unittest.TestCase):
         self.assertTrue(json_data["success"])
         self.assertEqual(json_data["user"]["name"], "Nested User")
         self.assertIsInstance(json_data["user"]["id"], str)
-        self.assertEqual(json_data["user"]["parent_id"], str(self.test_friendly_uuid))
+        self.assertEqual(json_data["user"]["parent_id"], str(self.test_friendly_id))
 
     def test_json_schema_generation(self):
         """Test JSON schema generation includes FriendlyID metadata."""
@@ -228,7 +228,7 @@ class TestPydanticIntegration(unittest.TestCase):
         user_with_parent = self.User(
             id=PydanticFriendlyID.random(),
             name="Child User",
-            parent_id=self.test_friendly_uuid,
+            parent_id=self.test_friendly_id,
         )
         self.assertIsInstance(user_with_parent.parent_id, PydanticFriendlyID)
 
@@ -241,16 +241,16 @@ class TestPydanticIntegration(unittest.TestCase):
     def test_model_validation_from_dict(self):
         """Test model validation from dictionary input."""
         data = {
-            "id": str(self.test_friendly_uuid),
+            "id": str(self.test_friendly_id),
             "name": "Dict User",
             "email": "dict@example.com",
-            "parent_id": str(self.test_friendly_uuid),
+            "parent_id": str(self.test_friendly_id),
         }
 
         user = self.User.model_validate(data)
 
         self.assertIsInstance(user.id, PydanticFriendlyID)
-        self.assertEqual(str(user.id), str(self.test_friendly_uuid))
+        self.assertEqual(str(user.id), str(self.test_friendly_id))
         self.assertEqual(user.name, "Dict User")
 
     def test_architectural_separation(self):

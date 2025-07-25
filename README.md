@@ -1,4 +1,4 @@
-# Friendly Id
+# FriendlyId
 
 [![test friendly-id](https://github.com/edwardzjl/friendly-id/actions/workflows/ci.yml/badge.svg)](https://github.com/edwardzjl/friendly-id/actions/workflows/ci.yml)
 
@@ -8,7 +8,7 @@ Inspired by [FriendlyID](https://github.com/Devskiller/friendly-id)
 
 The FriendlyID library provides a `UUID` subclass that uses base62 encoding for its string representation. This makes UUIDs more compact and URL-friendly, reducing their length from the standard 36 characters to **at most** 22. An example is shown below:
 
-    UUID                                        Friendly UUID
+    UUID                                        FriendlyID
 
     c3587ec5-0976-497f-8374-61e0c2ea3da5   ->   5wbwf6yUxVBcr48AMbz9cb
     |                                           |
@@ -18,7 +18,7 @@ The FriendlyID library provides a `UUID` subclass that uses base62 encoding for 
 
 ## Key Features
 
-- **Automatic friendly display**: `str(friendly_uuid)` returns the base62 format
+- **Automatic friendly display**: `str(friendly_id)` returns the base62 format
 - **Access to both formats**: `.friendly` property for base62, `.standard` property for UUID format
 - **Drop-in replacement**: Works with existing code that expects UUID objects
 - **Convert from a FriendlyID back to the original UUID format**
