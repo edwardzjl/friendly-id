@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Performance benchmark for FriendlyUUID.
+Performance benchmark for FriendlyID.
 
-This script benchmarks the two key aspects of FriendlyUUID:
+This script benchmarks the two key aspects of FriendlyID:
 1. Serialization Performance (CPU) - base62 encoding overhead
 2. Bandwidth Efficiency (I/O) - network/storage savings
 
@@ -20,7 +20,7 @@ import time
 import uuid
 from typing import Dict, Callable
 
-from friendly_id import FriendlyUUID
+from friendly_id import FriendlyID
 
 
 def time_function(func: Callable, iterations: int = 3) -> Dict[str, float]:
@@ -52,7 +52,7 @@ class BenchmarkRunner:
         # Pre-generate test data
         print(f"Generating {count} test UUIDs...")
         self.standard_uuids = [uuid.uuid4() for _ in range(count)]
-        self.friendly_uuids = [FriendlyUUID.from_uuid(u) for u in self.standard_uuids]
+        self.friendly_uuids = [FriendlyID.from_uuid(u) for u in self.standard_uuids]
 
     def benchmark_serialization_performance(self):
         """Benchmark CPU cost of serialization - the core base62 conversion."""
@@ -77,16 +77,14 @@ class BenchmarkRunner:
 
         results = {
             "UUID -> string": time_function(uuid_to_string, self.iterations),
-            "FriendlyUUID -> base62": time_function(
-                friendly_to_string, self.iterations
-            ),
+            "FriendlyID -> base62": time_function(friendly_to_string, self.iterations),
             "UUID -> JSON": time_function(uuid_json, self.iterations),
-            "FriendlyUUID -> JSON": time_function(friendly_json, self.iterations),
+            "FriendlyID -> JSON": time_function(friendly_json, self.iterations),
         }
 
         # Calculate performance overhead
         uuid_string_time = results["UUID -> string"]["mean"]
-        friendly_string_time = results["FriendlyUUID -> base62"]["mean"]
+        friendly_string_time = results["FriendlyID -> base62"]["mean"]
         overhead_factor = (
             friendly_string_time / uuid_string_time if uuid_string_time > 0 else 0
         )
@@ -131,13 +129,13 @@ class BenchmarkRunner:
             f"  Standard UUIDs:    {uuid_chars:,} chars ({uuid_chars / len(uuid_strings):.0f} per ID)"
         )
         print(
-            f"  FriendlyUUIDs:     {friendly_chars:,} chars ({friendly_chars / len(friendly_strings):.0f} per ID)"
+            f"  FriendlyIDs:     {friendly_chars:,} chars ({friendly_chars / len(friendly_strings):.0f} per ID)"
         )
         print(f"  Character savings: {char_savings:.1f}%")
 
         print("\nUTF-8 Byte Size:")
         print(f"  Standard UUIDs:    {uuid_bytes:,} bytes")
-        print(f"  FriendlyUUIDs:     {friendly_bytes:,} bytes")
+        print(f"  FriendlyIDs:     {friendly_bytes:,} bytes")
         print(f"  Bandwidth savings: {byte_savings:.1f}%")
 
         print("\n💡 I/O Impact Analysis:")
@@ -176,7 +174,7 @@ class BenchmarkRunner:
 
     def run_all_benchmarks(self):
         """Run all available benchmarks."""
-        print("🚀 FriendlyUUID Performance Benchmark")
+        print("🚀 FriendlyID Performance Benchmark")
         print(f"Testing with {self.count:,} items, {self.iterations} iterations each")
         print("=" * 70)
 
@@ -191,7 +189,7 @@ class BenchmarkRunner:
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="FriendlyUUID performance benchmark")
+    parser = argparse.ArgumentParser(description="FriendlyID performance benchmark")
     parser.add_argument(
         "--count",
         type=int,
@@ -220,7 +218,7 @@ def main():
     # Summary
     print("\n📊 Summary")
     print("=" * 50)
-    print("FriendlyUUID Trade-offs:")
+    print("FriendlyID Trade-offs:")
     print("• CPU: ~6x slower base62 encoding (microseconds per ID)")
     print("• I/O: ~39% bandwidth savings (significant for APIs/storage)")
     print("• Format: URL-safe, no special characters")

@@ -1,8 +1,8 @@
 """
-Pydantic integration for FriendlyUUID.
+Pydantic integration for FriendlyID.
 
-This module provides Pydantic-compatible types for working with FriendlyUUID
-in Pydantic models. The PydanticFriendlyUUID extends FriendlyUUID with
+This module provides Pydantic-compatible types for working with FriendlyID
+in Pydantic models. The PydanticFriendlyID extends FriendlyID with
 proper Pydantic v2 validation and serialization support.
 
 To use this module, install with the pydantic extra:
@@ -22,28 +22,28 @@ except ImportError:
 import uuid
 from typing import Any
 
-from .friendly_id import FriendlyUUID
+from .friendly_id import FriendlyID
 
 
-class PydanticFriendlyUUID(FriendlyUUID):
+class PydanticFriendlyID(FriendlyID):
     """
-    A Pydantic-compatible FriendlyUUID that provides proper validation
+    A Pydantic-compatible FriendlyID that provides proper validation
     and serialization for Pydantic v2 models.
 
-    This class extends FriendlyUUID with Pydantic-specific methods for
+    This class extends FriendlyID with Pydantic-specific methods for
     validation, serialization, and JSON schema generation.
 
     Example:
-        from friendly_id.pydantic_types import PydanticFriendlyUUID as FriendlyUUID
+        from friendly_id.pydantic_types import PydanticFriendlyID as FriendlyID
         from pydantic import BaseModel
 
         class User(BaseModel):
-            id: FriendlyUUID
+            id: FriendlyID
             name: str
             email: str | None = None
 
         # Create from various input types
-        user1 = User(id=FriendlyUUID.random(), name="John")
+        user1 = User(id=FriendlyID.random(), name="John")
         user2 = User(id="5wbwf6yUxVBcr48AMbz9cb", name="Jane")  # base62
         user3 = User(id="c3587ec5-0976-497f-8374-61e0c2ea3da5", name="Bob")  # UUID
 
@@ -59,17 +59,17 @@ class PydanticFriendlyUUID(FriendlyUUID):
         """
         Pydantic v2 core schema for validation and serialization.
 
-        Returns a core schema that accepts FriendlyUUID instances, regular UUID
+        Returns a core schema that accepts FriendlyID instances, regular UUID
         objects, base62 strings, and standard UUID strings, converting them all
-        to PydanticFriendlyUUID instances.
+        to PydanticFriendlyID instances.
         """
 
-        def validate_friendly_uuid(value: Any) -> "PydanticFriendlyUUID":
-            """Validate and convert input to PydanticFriendlyUUID."""
+        def validate_friendly_uuid(value: Any) -> "PydanticFriendlyID":
+            """Validate and convert input to PydanticFriendlyID."""
             if isinstance(value, cls):
                 return value
-            elif isinstance(value, FriendlyUUID):
-                # Convert FriendlyUUID to PydanticFriendlyUUID
+            elif isinstance(value, FriendlyID):
+                # Convert FriendlyID to PydanticFriendlyID
                 return cls.from_uuid(value.to_uuid())
             elif isinstance(value, uuid.UUID):
                 return cls.from_uuid(value)
@@ -81,16 +81,16 @@ class PydanticFriendlyUUID(FriendlyUUID):
                     try:
                         return cls.from_uuid(uuid.UUID(value))
                     except ValueError:
-                        raise ValueError(f"Invalid FriendlyUUID format: {value}")
+                        raise ValueError(f"Invalid FriendlyID format: {value}")
             else:
                 raise ValueError(
-                    f"PydanticFriendlyUUID expected str or UUID, got {type(value)}"
+                    f"PydanticFriendlyID expected str or UUID, got {type(value)}"
                 )
 
         # Create a union schema that accepts multiple input types
         return core_schema.union_schema(
             [
-                # Accept existing PydanticFriendlyUUID instances (pass through)
+                # Accept existing PydanticFriendlyID instances (pass through)
                 core_schema.is_instance_schema(cls),
                 # Accept strings and convert them
                 core_schema.no_info_after_validator_function(
@@ -100,9 +100,9 @@ class PydanticFriendlyUUID(FriendlyUUID):
                 core_schema.no_info_after_validator_function(
                     validate_friendly_uuid, core_schema.is_instance_schema(uuid.UUID)
                 ),
-                # Accept FriendlyUUID instances and convert them
+                # Accept FriendlyID instances and convert them
                 core_schema.no_info_after_validator_function(
-                    validate_friendly_uuid, core_schema.is_instance_schema(FriendlyUUID)
+                    validate_friendly_uuid, core_schema.is_instance_schema(FriendlyID)
                 ),
             ],
             serialization=core_schema.to_string_ser_schema(),

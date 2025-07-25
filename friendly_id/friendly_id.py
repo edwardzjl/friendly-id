@@ -31,7 +31,7 @@ def _decode_base62_to_int(base62_str: str) -> int:
     return res
 
 
-class FriendlyUUID(uuid.UUID):
+class FriendlyID(uuid.UUID):
     """
     A UUID subclass that uses base62 encoding for string representation.
 
@@ -51,7 +51,7 @@ class FriendlyUUID(uuid.UUID):
         friendly: str = None,
     ):
         """
-        Initialize a FriendlyUUID.
+        Initialize a FriendlyID.
 
         Accepts all standard UUID constructor arguments, plus:
 
@@ -79,18 +79,18 @@ class FriendlyUUID(uuid.UUID):
             )
 
     @classmethod
-    def from_uuid(cls, uuid_obj: uuid.UUID) -> "FriendlyUUID":
-        """Create a FriendlyUUID from a standard UUID object."""
+    def from_uuid(cls, uuid_obj: uuid.UUID) -> "FriendlyID":
+        """Create a FriendlyID from a standard UUID object."""
         return cls(int=uuid_obj.int)
 
     @classmethod
-    def from_friendly(cls, friendly_str: str) -> "FriendlyUUID":
-        """Create a FriendlyUUID from a base62 encoded string."""
+    def from_friendly(cls, friendly_str: str) -> "FriendlyID":
+        """Create a FriendlyID from a base62 encoded string."""
         return cls(friendly=friendly_str)
 
     @classmethod
-    def random(cls) -> "FriendlyUUID":
-        """Generate a random FriendlyUUID (equivalent to uuid4)."""
+    def random(cls) -> "FriendlyID":
+        """Generate a random FriendlyID (equivalent to uuid4)."""
         return cls.from_uuid(uuid.uuid4())
 
     def __str__(self) -> str:
@@ -99,7 +99,7 @@ class FriendlyUUID(uuid.UUID):
 
     def __repr__(self) -> str:
         """Return a detailed representation showing both formats."""
-        return f"FriendlyUUID('{self!s}', uuid='{super().__str__()}')"
+        return f"FriendlyID('{self!s}', uuid='{super().__str__()}')"
 
     @property
     def friendly(self) -> str:
