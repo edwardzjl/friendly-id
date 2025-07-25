@@ -18,12 +18,12 @@ import statistics
 import sys
 import time
 import uuid
-from typing import Dict, Callable
+from typing import Callable
 
 from friendly_id import FriendlyID
 
 
-def time_function(func: Callable, iterations: int = 3) -> Dict[str, float]:
+def time_function(func: Callable, iterations: int = 3) -> dict[str, float]:
     """Time a function multiple times and return statistics."""
     times = []
     for _ in range(iterations):
@@ -153,7 +153,7 @@ class BenchmarkRunner:
             "kb_saved": kb_saved,
         }
 
-    def _print_results(self, results: Dict[str, Dict[str, float]]):
+    def _print_results(self, results: dict[str, dict[str, float]]):
         """Print benchmark results in a formatted table."""
         if not results:
             return
