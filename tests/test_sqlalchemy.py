@@ -62,14 +62,14 @@ class TestFriendlyIDSQLAlchemy(unittest.TestCase):
 
         # Test data
         self.test_uuid = uuid.UUID("c3587ec5-0976-497f-8374-61e0c2ea3da5")
-        self.test_friendly_uuid = FriendlyID.from_uuid(self.test_uuid)
+        self.test_friendly_id = FriendlyID.from_uuid(self.test_uuid)
         self.test_base62 = "5wbwf6yUxVBcr48AMbz9cb"
 
-    def test_friendly_uuid_type_creation(self):
+    def test_friendly_id_type_creation(self):
         """Test creating and retrieving records with FriendlyIDType."""
         # Create user with FriendlyID
         user = self.User(
-            id=self.test_friendly_uuid, name="John Doe", email="john@example.com"
+            id=self.test_friendly_id, name="John Doe", email="john@example.com"
         )
 
         with self.sessionmaker() as session:
@@ -81,10 +81,10 @@ class TestFriendlyIDSQLAlchemy(unittest.TestCase):
 
         self.assertIsNotNone(retrieved_user)
         self.assertIsInstance(retrieved_user.id, FriendlyID)
-        self.assertEqual(retrieved_user.id, self.test_friendly_uuid)
+        self.assertEqual(retrieved_user.id, self.test_friendly_id)
         self.assertEqual(str(retrieved_user.id), self.test_base62)
 
-    def test_friendly_uuid_type_with_regular_uuid(self):
+    def test_friendly_id_type_with_regular_uuid(self):
         """Test that FriendlyIDType can handle regular UUID input."""
         # Create user with regular UUID
         user = self.User(id=self.test_uuid, name="Jane Doe", email="jane@example.com")
@@ -99,7 +99,7 @@ class TestFriendlyIDSQLAlchemy(unittest.TestCase):
         self.assertIsInstance(retrieved_user.id, FriendlyID)
         self.assertEqual(retrieved_user.id.to_uuid(), self.test_uuid)
 
-    def test_friendly_uuid_type_with_string_input(self):
+    def test_friendly_id_type_with_string_input(self):
         """Test that FriendlyIDType can handle string input."""
         # Test with UUID string
         user = self.User(id=str(self.test_uuid), name="User", email="user@example.com")
@@ -115,11 +115,11 @@ class TestFriendlyIDSQLAlchemy(unittest.TestCase):
         self.assertIsInstance(retrieved_user.id, FriendlyID)
         self.assertEqual(retrieved_user.id.to_uuid(), self.test_uuid)
 
-    def test_querying_by_friendly_uuid(self):
+    def test_querying_by_friendly_id(self):
         """Test querying records using FriendlyID."""
         # Create a user
         user = self.User(
-            id=self.test_friendly_uuid, name="Query User", email="query@example.com"
+            id=self.test_friendly_id, name="Query User", email="query@example.com"
         )
 
         with self.sessionmaker() as session:
@@ -129,7 +129,7 @@ class TestFriendlyIDSQLAlchemy(unittest.TestCase):
         with self.sessionmaker() as session:
             # Query by FriendlyID
             retrieved_user = (
-                session.query(self.User).filter_by(id=self.test_friendly_uuid).first()
+                session.query(self.User).filter_by(id=self.test_friendly_id).first()
             )
         self.assertIsNotNone(retrieved_user)
         self.assertEqual(retrieved_user.name, "Query User")
@@ -207,7 +207,7 @@ class TestFriendlyIDTypeDialects(unittest.TestCase):
         """Set up mock dialects for testing."""
         self.uuid_type = FriendlyIDType()
         self.test_uuid = uuid.UUID("c3587ec5-0976-497f-8374-61e0c2ea3da5")
-        self.test_friendly_uuid = FriendlyID.from_uuid(self.test_uuid)
+        self.test_friendly_id = FriendlyID.from_uuid(self.test_uuid)
 
     def test_postgresql_dialect(self):
         """Test behavior with PostgreSQL dialect."""
@@ -216,16 +216,14 @@ class TestFriendlyIDTypeDialects(unittest.TestCase):
         mock_dialect.name = "postgresql"
 
         # Test bind param processing
-        result = self.uuid_type.process_bind_param(
-            self.test_friendly_uuid, mock_dialect
-        )
+        result = self.uuid_type.process_bind_param(self.test_friendly_id, mock_dialect)
         self.assertIsInstance(result, uuid.UUID)
         self.assertEqual(result, self.test_uuid)
 
         # Test result processing
         result = self.uuid_type.process_result_value(self.test_uuid, mock_dialect)
         self.assertIsInstance(result, FriendlyID)
-        self.assertEqual(result, self.test_friendly_uuid)
+        self.assertEqual(result, self.test_friendly_id)
 
     def test_sqlite_dialect(self):
         """Test behavior with SQLite dialect."""
@@ -234,15 +232,13 @@ class TestFriendlyIDTypeDialects(unittest.TestCase):
         mock_dialect.name = "sqlite"
 
         # Test bind param processing
-        result = self.uuid_type.process_bind_param(
-            self.test_friendly_uuid, mock_dialect
-        )
+        result = self.uuid_type.process_bind_param(self.test_friendly_id, mock_dialect)
         self.assertEqual(result, str(self.test_uuid))
 
         # Test result processing
         result = self.uuid_type.process_result_value(str(self.test_uuid), mock_dialect)
         self.assertIsInstance(result, FriendlyID)
-        self.assertEqual(result, self.test_friendly_uuid)
+        self.assertEqual(result, self.test_friendly_id)
 
     def test_mysql_dialect(self):
         """Test behavior with MySQL dialect."""
@@ -251,15 +247,13 @@ class TestFriendlyIDTypeDialects(unittest.TestCase):
         mock_dialect.name = "mysql"
 
         # Test bind param processing
-        result = self.uuid_type.process_bind_param(
-            self.test_friendly_uuid, mock_dialect
-        )
+        result = self.uuid_type.process_bind_param(self.test_friendly_id, mock_dialect)
         self.assertEqual(result, str(self.test_uuid))
 
         # Test result processing
         result = self.uuid_type.process_result_value(str(self.test_uuid), mock_dialect)
         self.assertIsInstance(result, FriendlyID)
-        self.assertEqual(result, self.test_friendly_uuid)
+        self.assertEqual(result, self.test_friendly_id)
 
 
 if __name__ == "__main__":

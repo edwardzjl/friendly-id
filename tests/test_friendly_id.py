@@ -106,19 +106,19 @@ class TestFriendlyID(unittest.TestCase):
     def test_comparison_with_regular_uuid(self):
         """Test how FriendlyID compares with regular UUID."""
         regular_uuid = uuid.UUID(self.test_uuid_str)
-        friendly_uuid = FriendlyID(self.test_uuid_str)
+        friendly_id = FriendlyID(self.test_uuid_str)
 
         # Test equality
-        self.assertEqual(friendly_uuid, regular_uuid)
-        self.assertEqual(regular_uuid, friendly_uuid)
+        self.assertEqual(friendly_id, regular_uuid)
+        self.assertEqual(regular_uuid, friendly_id)
 
         # Test isinstance
-        self.assertIsInstance(friendly_uuid, uuid.UUID)
-        self.assertIsInstance(friendly_uuid, FriendlyID)
+        self.assertIsInstance(friendly_id, uuid.UUID)
+        self.assertIsInstance(friendly_id, FriendlyID)
         self.assertNotIsInstance(regular_uuid, FriendlyID)
 
         # Test in sets (should be treated as same object)
-        uuid_set = {regular_uuid, friendly_uuid}
+        uuid_set = {regular_uuid, friendly_id}
         self.assertEqual(len(uuid_set), 1)  # Should deduplicate to 1 item
 
     def test_error_handling(self):
@@ -140,14 +140,14 @@ class TestFriendlyID(unittest.TestCase):
         original_uuid = uuid.uuid4()
 
         # Convert to FriendlyID and back
-        friendly_uuid = FriendlyID.from_uuid(original_uuid)
-        converted_back = friendly_uuid.to_uuid()
+        friendly_id = FriendlyID.from_uuid(original_uuid)
+        converted_back = friendly_id.to_uuid()
 
         self.assertEqual(original_uuid, converted_back)
-        self.assertEqual(original_uuid.int, friendly_uuid.int)
+        self.assertEqual(original_uuid.int, friendly_id.int)
 
         # Test with base62 string
-        base62_str = str(friendly_uuid)
+        base62_str = str(friendly_id)
         from_base62 = FriendlyID.from_friendly(base62_str)
         self.assertEqual(original_uuid, from_base62)
 
