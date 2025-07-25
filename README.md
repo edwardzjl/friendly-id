@@ -2,7 +2,7 @@
 
 > version 0.5.0
 
-[![test friendly-id](https://github.com/edwardzjl/friendly-id/actions/workflows/test.yml/badge.svg)](https://github.com/edwardzjl/friendly-id/actions/workflows/test.yml)
+[![test friendly-id](https://github.com/edwardzjl/friendly-id/actions/workflows/ci.yml/badge.svg)](https://github.com/edwardzjl/friendly-id/actions/workflows/ci.yml)
 
 Inspired by [FriendlyID](https://github.com/Devskiller/friendly-id)
 
