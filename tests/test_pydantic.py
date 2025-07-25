@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Unittest-based tests for Pydantic integration with FriendlyUUID.
+Unittest-based tests for Pydantic integration with FriendlyID.
 
-These tests verify that PydanticFriendlyUUID works correctly with Pydantic v2
+These tests verify that PydanticFriendlyID works correctly with Pydantic v2
 for validation, serialization, and schema generation.
 """
 
@@ -13,7 +13,7 @@ from typing import Optional
 
 try:
     from pydantic import BaseModel, ValidationError
-    from friendly_id.pydantic_types import PydanticFriendlyUUID
+    from friendly_id.pydantic_types import PydanticFriendlyID
 
     PYDANTIC_AVAILABLE = True
 except ImportError:
@@ -21,27 +21,27 @@ except ImportError:
     BaseModel = object  # Dummy class for when Pydantic is not available
 
     # Create a dummy class for type annotations
-    class PydanticFriendlyUUID:
+    class PydanticFriendlyID:
         pass
 
 
-from friendly_id import FriendlyUUID
+from friendly_id import FriendlyID
 
 
 @unittest.skipUnless(PYDANTIC_AVAILABLE, "Pydantic not available")
 class TestPydanticIntegration(unittest.TestCase):
-    """Test PydanticFriendlyUUID integration with Pydantic."""
+    """Test PydanticFriendlyID integration with Pydantic."""
 
     def setUp(self):
         """Set up test fixtures."""
 
         class User(BaseModel):
-            """Example Pydantic model using PydanticFriendlyUUID."""
+            """Example Pydantic model using PydanticFriendlyID."""
 
-            id: PydanticFriendlyUUID
+            id: PydanticFriendlyID
             name: str
             email: Optional[str] = None
-            parent_id: Optional[PydanticFriendlyUUID] = None
+            parent_id: Optional[PydanticFriendlyID] = None
 
         class UserResponse(BaseModel):
             """Nested model for testing."""
@@ -51,30 +51,30 @@ class TestPydanticIntegration(unittest.TestCase):
 
         self.User = User
         self.UserResponse = UserResponse
-        self.test_friendly_uuid = PydanticFriendlyUUID.from_friendly(
+        self.test_friendly_uuid = PydanticFriendlyID.from_friendly(
             "5wbwf6yUxVBcr48AMbz9cb"
         )
 
     def test_core_schema_method_exists(self):
         """Test that the core schema method exists for Pydantic v2."""
-        self.assertTrue(hasattr(PydanticFriendlyUUID, "__get_pydantic_core_schema__"))
+        self.assertTrue(hasattr(PydanticFriendlyID, "__get_pydantic_core_schema__"))
         self.assertTrue(
-            callable(getattr(PydanticFriendlyUUID, "__get_pydantic_core_schema__"))
+            callable(getattr(PydanticFriendlyID, "__get_pydantic_core_schema__"))
         )
 
     def test_json_schema_method_exists(self):
         """Test that the JSON schema method exists for Pydantic v2."""
-        self.assertTrue(hasattr(PydanticFriendlyUUID, "__get_pydantic_json_schema__"))
+        self.assertTrue(hasattr(PydanticFriendlyID, "__get_pydantic_json_schema__"))
         self.assertTrue(
-            callable(getattr(PydanticFriendlyUUID, "__get_pydantic_json_schema__"))
+            callable(getattr(PydanticFriendlyID, "__get_pydantic_json_schema__"))
         )
 
     def test_validation_with_friendly_uuid_instance(self):
-        """Test validation with PydanticFriendlyUUID instance."""
-        fuid = PydanticFriendlyUUID.random()
+        """Test validation with PydanticFriendlyID instance."""
+        fuid = PydanticFriendlyID.random()
         user = self.User(id=fuid, name="John Doe")
 
-        self.assertIsInstance(user.id, PydanticFriendlyUUID)
+        self.assertIsInstance(user.id, PydanticFriendlyID)
         self.assertEqual(user.id, fuid)
         self.assertEqual(user.name, "John Doe")
 
@@ -83,7 +83,7 @@ class TestPydanticIntegration(unittest.TestCase):
         base62_str = "5wbwf6yUxVBcr48AMbz9cb"
         user = self.User(id=base62_str, name="Jane Doe")
 
-        self.assertIsInstance(user.id, PydanticFriendlyUUID)
+        self.assertIsInstance(user.id, PydanticFriendlyID)
         self.assertEqual(str(user.id), base62_str)
 
     def test_validation_with_uuid_string(self):
@@ -92,7 +92,7 @@ class TestPydanticIntegration(unittest.TestCase):
         uuid_str = str(regular_uuid)
         user = self.User(id=uuid_str, name="Bob Smith")
 
-        self.assertIsInstance(user.id, PydanticFriendlyUUID)
+        self.assertIsInstance(user.id, PydanticFriendlyID)
         self.assertEqual(user.id.int, regular_uuid.int)
 
     def test_validation_with_uuid_object(self):
@@ -100,15 +100,15 @@ class TestPydanticIntegration(unittest.TestCase):
         regular_uuid = uuid.uuid4()
         user = self.User(id=regular_uuid, name="Alice Johnson")
 
-        self.assertIsInstance(user.id, PydanticFriendlyUUID)
+        self.assertIsInstance(user.id, PydanticFriendlyID)
         self.assertEqual(user.id.int, regular_uuid.int)
 
     def test_validation_with_regular_friendly_uuid(self):
-        """Test validation with regular FriendlyUUID instance."""
-        regular_fuid = FriendlyUUID.random()
+        """Test validation with regular FriendlyID instance."""
+        regular_fuid = FriendlyID.random()
         user = self.User(id=regular_fuid, name="Charlie Brown")
 
-        self.assertIsInstance(user.id, PydanticFriendlyUUID)
+        self.assertIsInstance(user.id, PydanticFriendlyID)
         self.assertEqual(user.id.int, regular_fuid.int)
 
     def test_validation_errors(self):
@@ -138,9 +138,9 @@ class TestPydanticIntegration(unittest.TestCase):
 
         user_dict = user.model_dump()
 
-        # Check that IDs are still PydanticFriendlyUUID instances in dict
-        self.assertIsInstance(user_dict["id"], PydanticFriendlyUUID)
-        self.assertIsInstance(user_dict["parent_id"], PydanticFriendlyUUID)
+        # Check that IDs are still PydanticFriendlyID instances in dict
+        self.assertIsInstance(user_dict["id"], PydanticFriendlyID)
+        self.assertIsInstance(user_dict["parent_id"], PydanticFriendlyID)
 
         # Check values
         self.assertEqual(user_dict["name"], "Test User")
@@ -186,9 +186,9 @@ class TestPydanticIntegration(unittest.TestCase):
         self.assertEqual(original_user.email, reconstructed_user.email)
 
     def test_nested_models(self):
-        """Test PydanticFriendlyUUID in nested Pydantic models."""
+        """Test PydanticFriendlyID in nested Pydantic models."""
         user = self.User(
-            id=PydanticFriendlyUUID.random(),
+            id=PydanticFriendlyID.random(),
             name="Nested User",
             parent_id=self.test_friendly_uuid,
         )
@@ -205,7 +205,7 @@ class TestPydanticIntegration(unittest.TestCase):
         self.assertEqual(json_data["user"]["parent_id"], str(self.test_friendly_uuid))
 
     def test_json_schema_generation(self):
-        """Test JSON schema generation includes FriendlyUUID metadata."""
+        """Test JSON schema generation includes FriendlyID metadata."""
         schema = self.User.model_json_schema()
 
         # Check that the schema exists
@@ -223,18 +223,18 @@ class TestPydanticIntegration(unittest.TestCase):
         )
 
     def test_optional_fields(self):
-        """Test handling of optional PydanticFriendlyUUID fields."""
+        """Test handling of optional PydanticFriendlyID fields."""
         # Test with optional field provided
         user_with_parent = self.User(
-            id=PydanticFriendlyUUID.random(),
+            id=PydanticFriendlyID.random(),
             name="Child User",
             parent_id=self.test_friendly_uuid,
         )
-        self.assertIsInstance(user_with_parent.parent_id, PydanticFriendlyUUID)
+        self.assertIsInstance(user_with_parent.parent_id, PydanticFriendlyID)
 
         # Test with optional field omitted
         user_without_parent = self.User(
-            id=PydanticFriendlyUUID.random(), name="Root User"
+            id=PydanticFriendlyID.random(), name="Root User"
         )
         self.assertIsNone(user_without_parent.parent_id)
 
@@ -249,31 +249,31 @@ class TestPydanticIntegration(unittest.TestCase):
 
         user = self.User.model_validate(data)
 
-        self.assertIsInstance(user.id, PydanticFriendlyUUID)
+        self.assertIsInstance(user.id, PydanticFriendlyID)
         self.assertEqual(str(user.id), str(self.test_friendly_uuid))
         self.assertEqual(user.name, "Dict User")
 
     def test_architectural_separation(self):
-        """Test that core FriendlyUUID doesn't have Pydantic methods."""
-        # Core FriendlyUUID should NOT have Pydantic methods (clean separation)
-        self.assertFalse(hasattr(FriendlyUUID, "__get_pydantic_core_schema__"))
-        self.assertFalse(hasattr(FriendlyUUID, "__get_pydantic_json_schema__"))
+        """Test that core FriendlyID doesn't have Pydantic methods."""
+        # Core FriendlyID should NOT have Pydantic methods (clean separation)
+        self.assertFalse(hasattr(FriendlyID, "__get_pydantic_core_schema__"))
+        self.assertFalse(hasattr(FriendlyID, "__get_pydantic_json_schema__"))
 
-        # PydanticFriendlyUUID SHOULD have Pydantic methods
-        self.assertTrue(hasattr(PydanticFriendlyUUID, "__get_pydantic_core_schema__"))
-        self.assertTrue(hasattr(PydanticFriendlyUUID, "__get_pydantic_json_schema__"))
+        # PydanticFriendlyID SHOULD have Pydantic methods
+        self.assertTrue(hasattr(PydanticFriendlyID, "__get_pydantic_core_schema__"))
+        self.assertTrue(hasattr(PydanticFriendlyID, "__get_pydantic_json_schema__"))
 
     def test_inheritance_relationship(self):
-        """Test that PydanticFriendlyUUID properly inherits from FriendlyUUID."""
-        puid = PydanticFriendlyUUID.random()
+        """Test that PydanticFriendlyID properly inherits from FriendlyID."""
+        puid = PydanticFriendlyID.random()
 
         # Should be instance of all parent classes
-        self.assertIsInstance(puid, PydanticFriendlyUUID)
-        self.assertIsInstance(puid, FriendlyUUID)
+        self.assertIsInstance(puid, PydanticFriendlyID)
+        self.assertIsInstance(puid, FriendlyID)
         self.assertIsInstance(puid, uuid.UUID)
 
-        # Should have the same string representation as core FriendlyUUID
-        fuid = FriendlyUUID.from_uuid(puid.to_uuid())
+        # Should have the same string representation as core FriendlyID
+        fuid = FriendlyID.from_uuid(puid.to_uuid())
         self.assertEqual(str(puid), str(fuid))
 
 

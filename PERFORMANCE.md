@@ -1,6 +1,6 @@
 # Performance Benchmark Results
 
-This document shows the performance trade-offs of FriendlyUUID, focusing on the two key aspects: CPU overhead vs I/O efficiency.
+This document shows the performance trade-offs of FriendlyID, focusing on the two key aspects: CPU overhead vs I/O efficiency.
 
 ## Running the Benchmark
 
@@ -31,7 +31,7 @@ The benchmark focuses on two fundamental aspects:
 - **Bandwidth savings**: 39% less network traffic for text-based transmission
 - **Real impact**: 14KB saved per 1,000 IDs in APIs, URLs, and logs
 
-**Analysis**: FriendlyUUID provides substantial I/O benefits for text-based formats (JSON APIs, URLs, log files, CSV exports). Database storage uses the underlying UUID, so no storage savings there.
+**Analysis**: FriendlyID provides substantial I/O benefits for text-based formats (JSON APIs, URLs, log files, CSV exports). Database storage uses the underlying UUID, so no storage savings there.
 
 ## Sample Results
 
@@ -43,9 +43,9 @@ Here's what the benchmark typically shows:
 Operation                           Mean (ms)    
 ---------------------------------------------------------------------------
 UUID -> string                      0.60
-FriendlyUUID -> base62              3.70
+FriendlyID -> base62              3.70
 UUID -> JSON                        0.71
-FriendlyUUID -> JSON                3.72
+FriendlyID -> JSON                3.72
 
 💡 Performance Analysis:
    Base62 encoding is 6.1x slower than UUID string conversion
@@ -56,7 +56,7 @@ FriendlyUUID -> JSON                3.72
 ==================================================
 String Length Comparison (1,000 IDs):
   Standard UUIDs:    36,000 chars (36 per ID)
-  FriendlyUUIDs:     21,871 chars (22 per ID)
+  FriendlyIDs:     21,871 chars (22 per ID)
   Character savings: 39.2%
 
 💡 I/O Impact Analysis:

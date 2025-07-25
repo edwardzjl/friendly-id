@@ -1,5 +1,5 @@
 """
-Tests for SQLAlchemy integration with FriendlyUUID.
+Tests for SQLAlchemy integration with FriendlyID.
 
 These tests require SQLAlchemy to be installed:
     pip install friendly-id[sqlalchemy]
@@ -23,15 +23,15 @@ except ImportError:
     SQLALCHEMY_AVAILABLE = False
 
 if SQLALCHEMY_AVAILABLE:
-    from friendly_id import FriendlyUUID
+    from friendly_id import FriendlyID
     from friendly_id.sqlalchemy_types import (
-        FriendlyUUIDType,
+        FriendlyIDType,
     )
 
 
 @unittest.skipUnless(SQLALCHEMY_AVAILABLE, "SQLAlchemy not available")
-class TestFriendlyUUIDSQLAlchemy(unittest.TestCase):
-    """Test SQLAlchemy integration with FriendlyUUID."""
+class TestFriendlyIDSQLAlchemy(unittest.TestCase):
+    """Test SQLAlchemy integration with FriendlyID."""
 
     def setUp(self):
         """Set up test database and tables."""
@@ -46,8 +46,8 @@ class TestFriendlyUUIDSQLAlchemy(unittest.TestCase):
         # Define test models
         class User(Base):
             __tablename__ = "users"
-            id: Mapped[FriendlyUUID] = mapped_column(
-                FriendlyUUIDType, primary_key=True, insert_default=FriendlyUUID.random
+            id: Mapped[FriendlyID] = mapped_column(
+                FriendlyIDType, primary_key=True, insert_default=FriendlyID.random
             )
             name: Mapped[str] = mapped_column(Text)
             email: Mapped[str] = mapped_column(Text)
@@ -62,12 +62,12 @@ class TestFriendlyUUIDSQLAlchemy(unittest.TestCase):
 
         # Test data
         self.test_uuid = uuid.UUID("c3587ec5-0976-497f-8374-61e0c2ea3da5")
-        self.test_friendly_uuid = FriendlyUUID.from_uuid(self.test_uuid)
+        self.test_friendly_uuid = FriendlyID.from_uuid(self.test_uuid)
         self.test_base62 = "5wbwf6yUxVBcr48AMbz9cb"
 
     def test_friendly_uuid_type_creation(self):
-        """Test creating and retrieving records with FriendlyUUIDType."""
-        # Create user with FriendlyUUID
+        """Test creating and retrieving records with FriendlyIDType."""
+        # Create user with FriendlyID
         user = self.User(
             id=self.test_friendly_uuid, name="John Doe", email="john@example.com"
         )
@@ -80,12 +80,12 @@ class TestFriendlyUUIDSQLAlchemy(unittest.TestCase):
             retrieved_user = session.query(self.User).filter_by(name="John Doe").first()
 
         self.assertIsNotNone(retrieved_user)
-        self.assertIsInstance(retrieved_user.id, FriendlyUUID)
+        self.assertIsInstance(retrieved_user.id, FriendlyID)
         self.assertEqual(retrieved_user.id, self.test_friendly_uuid)
         self.assertEqual(str(retrieved_user.id), self.test_base62)
 
     def test_friendly_uuid_type_with_regular_uuid(self):
-        """Test that FriendlyUUIDType can handle regular UUID input."""
+        """Test that FriendlyIDType can handle regular UUID input."""
         # Create user with regular UUID
         user = self.User(id=self.test_uuid, name="Jane Doe", email="jane@example.com")
         with self.sessionmaker() as session:
@@ -96,11 +96,11 @@ class TestFriendlyUUIDSQLAlchemy(unittest.TestCase):
             retrieved_user = session.query(self.User).filter_by(name="Jane Doe").first()
 
         self.assertIsNotNone(retrieved_user)
-        self.assertIsInstance(retrieved_user.id, FriendlyUUID)
+        self.assertIsInstance(retrieved_user.id, FriendlyID)
         self.assertEqual(retrieved_user.id.to_uuid(), self.test_uuid)
 
     def test_friendly_uuid_type_with_string_input(self):
-        """Test that FriendlyUUIDType can handle string input."""
+        """Test that FriendlyIDType can handle string input."""
         # Test with UUID string
         user = self.User(id=str(self.test_uuid), name="User", email="user@example.com")
 
@@ -112,11 +112,11 @@ class TestFriendlyUUIDSQLAlchemy(unittest.TestCase):
             retrieved_user = session.query(self.User).filter_by(name="User").first()
 
         self.assertIsNotNone(retrieved_user)
-        self.assertIsInstance(retrieved_user.id, FriendlyUUID)
+        self.assertIsInstance(retrieved_user.id, FriendlyID)
         self.assertEqual(retrieved_user.id.to_uuid(), self.test_uuid)
 
     def test_querying_by_friendly_uuid(self):
-        """Test querying records using FriendlyUUID."""
+        """Test querying records using FriendlyID."""
         # Create a user
         user = self.User(
             id=self.test_friendly_uuid, name="Query User", email="query@example.com"
@@ -127,7 +127,7 @@ class TestFriendlyUUIDSQLAlchemy(unittest.TestCase):
             session.commit()
 
         with self.sessionmaker() as session:
-            # Query by FriendlyUUID
+            # Query by FriendlyID
             retrieved_user = (
                 session.query(self.User).filter_by(id=self.test_friendly_uuid).first()
             )
@@ -179,8 +179,8 @@ class TestFriendlyUUIDSQLAlchemy(unittest.TestCase):
         class OptionalUser(self.Base):
             __tablename__ = "optional_users"
             id: Mapped[int] = mapped_column(Integer, primary_key=True)
-            uuid_field: Mapped[Union[FriendlyUUID, None]] = mapped_column(
-                FriendlyUUIDType, nullable=True
+            uuid_field: Mapped[Union[FriendlyID, None]] = mapped_column(
+                FriendlyIDType, nullable=True
             )
             name: Mapped[str] = mapped_column(Text)
 
@@ -200,14 +200,14 @@ class TestFriendlyUUIDSQLAlchemy(unittest.TestCase):
 
 
 @unittest.skipUnless(SQLALCHEMY_AVAILABLE, "SQLAlchemy not available")
-class TestFriendlyUUIDTypeDialects(unittest.TestCase):
-    """Test FriendlyUUIDType behavior with different database dialects."""
+class TestFriendlyIDTypeDialects(unittest.TestCase):
+    """Test FriendlyIDType behavior with different database dialects."""
 
     def setUp(self):
         """Set up mock dialects for testing."""
-        self.uuid_type = FriendlyUUIDType()
+        self.uuid_type = FriendlyIDType()
         self.test_uuid = uuid.UUID("c3587ec5-0976-497f-8374-61e0c2ea3da5")
-        self.test_friendly_uuid = FriendlyUUID.from_uuid(self.test_uuid)
+        self.test_friendly_uuid = FriendlyID.from_uuid(self.test_uuid)
 
     def test_postgresql_dialect(self):
         """Test behavior with PostgreSQL dialect."""
@@ -224,7 +224,7 @@ class TestFriendlyUUIDTypeDialects(unittest.TestCase):
 
         # Test result processing
         result = self.uuid_type.process_result_value(self.test_uuid, mock_dialect)
-        self.assertIsInstance(result, FriendlyUUID)
+        self.assertIsInstance(result, FriendlyID)
         self.assertEqual(result, self.test_friendly_uuid)
 
     def test_sqlite_dialect(self):
@@ -241,7 +241,7 @@ class TestFriendlyUUIDTypeDialects(unittest.TestCase):
 
         # Test result processing
         result = self.uuid_type.process_result_value(str(self.test_uuid), mock_dialect)
-        self.assertIsInstance(result, FriendlyUUID)
+        self.assertIsInstance(result, FriendlyID)
         self.assertEqual(result, self.test_friendly_uuid)
 
     def test_mysql_dialect(self):
@@ -258,7 +258,7 @@ class TestFriendlyUUIDTypeDialects(unittest.TestCase):
 
         # Test result processing
         result = self.uuid_type.process_result_value(str(self.test_uuid), mock_dialect)
-        self.assertIsInstance(result, FriendlyUUID)
+        self.assertIsInstance(result, FriendlyID)
         self.assertEqual(result, self.test_friendly_uuid)
 
 
