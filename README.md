@@ -8,25 +8,22 @@ Inspired by [FriendlyID](https://github.com/Devskiller/friendly-id)
 
 ## What is the FriendlyId library?
 
-The FriendlyID library provides a UUID subclass that uses base62 encoding for its string representation. It converts a given UUID (with 36 characters) to a URL-friendly ID (a "FriendlyUUID") which is based on Base62 (with a maximum of 22 characters), as in the example below:
-
+The FriendlyID library provides a `UUID` subclass that uses base62 encoding for its string representation. This makes UUIDs more compact and URL-friendly, reducing their length from the standard 36 characters to **at most** 22. An example is shown below:
 
     UUID                                        Friendly UUID
 
     c3587ec5-0976-497f-8374-61e0c2ea3da5   ->   5wbwf6yUxVBcr48AMbz9cb
-    |                                           |                              
+    |                                           |
     36 characters                               22 characters or less
 
 **FriendlyUUID extends the standard UUID class**, providing all the functionality of a regular UUID while displaying as a compact, URL-friendly string by default.
 
 ## Key Features
 
-* **Full UUID compatibility**: FriendlyUUID is a true UUID subclass
-* **Automatic friendly display**: `str(friendly_uuid)` returns the base62 format
-* **Access to both formats**: `.friendly` property for base62, `.standard` property for UUID format
-* **Drop-in replacement**: Works with existing code that expects UUID objects
-* **Convert from a FriendlyUUID back to the original UUID format**
-* **Create new, random FriendlyUUIDs**
+- **Automatic friendly display**: `str(friendly_uuid)` returns the base62 format
+- **Access to both formats**: `.friendly` property for base62, `.standard` property for UUID format
+- **Drop-in replacement**: Works with existing code that expects UUID objects
+- **Convert from a FriendlyUUID back to the original UUID format**
 
 ## Why use a FriendlyUUID?
 
@@ -34,12 +31,11 @@ Universal Unique IDs (UUIDs) provide a non-sequential and unique identifier that
 
 Such a format is:
 
-* difficult to read (especially if it is part of a URL)
-* difficult to remember
-* cannot be copied with just two mouse-clicks (you have to select manually the start and end positions)
-* can easily become broken across lines when it is copied, pasted, edited, or sent.
+- Cannot be copied with just two mouse-clicks (you have to select manually the start and end positions)
+- difficult to read
+- difficult to remember
 
-FriendlyUUID library solves these problems by extending the standard UUID class and overriding its string representation to use Base62 with alphanumeric characters in the range [0-9A-Za-z] into a compact representation which consists of a maximum of 22 characters (but in fact often contains fewer characters).
+FriendlyUUID library solves these problems by extending the standard UUID class and overriding its string representation to use Base62 with alphanumeric characters in the range [0-9A-Za-z] into a compact representation which consists of a **maximum of** 22 characters (but in fact often contains fewer characters).
 
 ## Usage
 
@@ -130,25 +126,6 @@ fuid == regular_uuid  # True
 uuid_set = {fuid, regular_uuid}  # Only one item (they're equal)
 ```
 
-### Database Usage
-
-```python
-from friendly_id import FriendlyUUID
-
-# For display/URLs (base62 format)
-user_id = FriendlyUUID.random()
-url = f"https://example.com/users/{user_id}"
-
-# For database storage (standard UUID format)
-db_value = user_id.standard
-cursor.execute("INSERT INTO users (id, name) VALUES (%s, %s)", 
-               (db_value, "John Doe"))
-
-# Loading from database
-loaded_uuid = FriendlyUUID(db_value)
-print(loaded_uuid)  # Displays in friendly format
-```
-
 ## SQLAlchemy Integration
 
 FriendlyUUID includes seamless SQLAlchemy integration through an optional extra:
@@ -162,16 +139,16 @@ pip install friendly-id[sqlalchemy]
 Stores UUIDs in the database's native UUID format while providing FriendlyUUID objects in Python:
 
 ```python
-from sqlalchemy import Text, create_engine
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from friendly_id import FriendlyUUID
 from friendly_id.sqlalchemy_types import FriendlyUUIDType
+from sqlalchemy import Text, create_engine
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 class Base(DeclarativeBase):
     pass
 
 class User(Base):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
     id: Mapped[FriendlyUUID] = mapped_column(
         FriendlyUUIDType, primary_key=True, insert_default=FriendlyUUID.random
@@ -204,7 +181,7 @@ FriendlyUUIDType automatically selects the optimal storage format for each datab
 
 ## Pydantic Integration
 
-FriendlyUUID includes built-in Pydantic v2 support for seamless integration with Pydantic models. Install the optional extra for enhanced features:
+FriendlyUUID includes built-in Pydantic support for seamless integration with Pydantic models. Install the optional extra for enhanced features:
 
 ```sh
 pip install friendly-id[pydantic]
@@ -259,7 +236,7 @@ schema = User.model_json_schema()
 FriendlyUUID involves a trade-off between CPU overhead and I/O efficiency:
 
 - **CPU**: ~6x slower base62 encoding (~3 microseconds per ID)
-- **I/O**: 39% bandwidth savings (22 vs 36 characters)
+- **I/O**: ~39% bandwidth savings (less than 22 vs 36 characters)
 - **Database**: Uses native UUID storage (no storage overhead)
 
 Run the included benchmark to see detailed performance analysis:
